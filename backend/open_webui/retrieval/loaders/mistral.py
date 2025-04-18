@@ -6,6 +6,7 @@ from typing import List, Dict, Any
 
 from langchain_core.documents import Document
 from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL
+from security import safe_requests
 
 logging.basicConfig(stream=sys.stdout, level=GLOBAL_LOG_LEVEL)
 log = logging.getLogger(__name__)
@@ -89,7 +90,7 @@ class MistralLoader:
         signed_url_headers = {**self.headers, "Accept": "application/json"}
 
         try:
-            response = requests.get(url, headers=signed_url_headers, params=params)
+            response = safe_requests.get(url, headers=signed_url_headers, params=params)
             response_data = self._handle_response(response)
             signed_url = response_data.get("url")
             if not signed_url:

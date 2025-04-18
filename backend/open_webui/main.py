@@ -17,7 +17,6 @@ from sqlalchemy import text
 from typing import Optional
 from aiocache import cached
 import aiohttp
-import requests
 
 
 from fastapi import (
@@ -380,6 +379,7 @@ from open_webui.tasks import (
 )  # Import from tasks.py
 
 from open_webui.utils.redis import get_sentinels_from_env
+from security import safe_requests
 
 
 if SAFE_MODE:
@@ -1430,7 +1430,7 @@ async def oauth_callback(provider: str, request: Request, response: Response):
 @app.get("/manifest.json")
 async def get_manifest_json():
     if app.state.EXTERNAL_PWA_MANIFEST_URL:
-        return requests.get(app.state.EXTERNAL_PWA_MANIFEST_URL).json()
+        return safe_requests.get(app.state.EXTERNAL_PWA_MANIFEST_URL).json()
     else:
         return {
             "name": app.state.WEBUI_NAME,

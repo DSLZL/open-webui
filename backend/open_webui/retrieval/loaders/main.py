@@ -104,7 +104,7 @@ class TikaLoader:
             endpoint += "/"
         endpoint += "tika/text"
 
-        r = requests.put(endpoint, data=data, headers=headers)
+        r = requests.put(endpoint, data=data, headers=headers, timeout=60)
 
         if r.ok:
             raw_metadata = r.json()
@@ -142,7 +142,7 @@ class DoclingLoader:
             }
 
             endpoint = f"{self.url}/v1alpha/convert/file"
-            r = requests.post(endpoint, files=files, data=params)
+            r = requests.post(endpoint, files=files, data=params, timeout=60)
 
         if r.ok:
             result = r.json()

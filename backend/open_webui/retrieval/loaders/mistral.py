@@ -68,8 +68,8 @@ class MistralLoader:
                 upload_headers = self.headers.copy()  # Avoid modifying self.headers
 
                 response = requests.post(
-                    url, headers=upload_headers, files=files, data=data
-                )
+                    url, headers=upload_headers, files=files, data=data, 
+                timeout=60)
 
             response_data = self._handle_response(response)
             file_id = response_data.get("id")
@@ -89,7 +89,7 @@ class MistralLoader:
         signed_url_headers = {**self.headers, "Accept": "application/json"}
 
         try:
-            response = requests.get(url, headers=signed_url_headers, params=params)
+            response = requests.get(url, headers=signed_url_headers, params=params, timeout=60)
             response_data = self._handle_response(response)
             signed_url = response_data.get("url")
             if not signed_url:
@@ -119,7 +119,7 @@ class MistralLoader:
         }
 
         try:
-            response = requests.post(url, headers=ocr_headers, json=payload)
+            response = requests.post(url, headers=ocr_headers, json=payload, timeout=60)
             ocr_response = self._handle_response(response)
             log.info("OCR processing done.")
             log.debug("OCR response: %s", ocr_response)
@@ -135,7 +135,7 @@ class MistralLoader:
         # No specific Accept header needed, default or Authorization is usually sufficient
 
         try:
-            response = requests.delete(url, headers=self.headers)
+            response = requests.delete(url, headers=self.headers, timeout=60)
             delete_response = self._handle_response(
                 response
             )  # Check status, ignore response body unless needed

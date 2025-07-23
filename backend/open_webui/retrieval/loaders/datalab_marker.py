@@ -6,6 +6,7 @@ import json
 from typing import List, Optional
 from langchain_core.documents import Document
 from fastapi import HTTPException, status
+from security import safe_requests
 
 log = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class DatalabMarkerLoader:
         url = f"https://www.datalab.to/api/v1/marker/{request_id}"
         headers = {"X-Api-Key": self.api_key}
         try:
-            response = requests.get(url, headers=headers)
+            response = safe_requests.get(url, headers=headers)
             response.raise_for_status()
             result = response.json()
             log.info(f"Marker API status check for request {request_id}: {result}")
@@ -141,7 +142,7 @@ class DatalabMarkerLoader:
         for _ in range(300):  # Up to 10 minutes
             time.sleep(2)
             try:
-                poll_response = requests.get(check_url, headers=headers)
+                poll_response = safe_requests.get(check_url, headers=headers)
                 poll_response.raise_for_status()
                 poll_result = poll_response.json()
             except (requests.HTTPError, ValueError) as e:

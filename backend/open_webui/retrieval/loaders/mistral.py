@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 
 from langchain_core.documents import Document
 from open_webui.env import SRC_LOG_LEVELS, GLOBAL_LOG_LEVEL
+from security import safe_requests
 
 logging.basicConfig(stream=sys.stdout, level=GLOBAL_LOG_LEVEL)
 log = logging.getLogger(__name__)
@@ -326,7 +327,7 @@ class MistralLoader:
         signed_url_headers = {**self.headers, "Accept": "application/json"}
 
         def url_request():
-            response = requests.get(
+            response = safe_requests.get(
                 url, headers=signed_url_headers, params=params, timeout=self.url_timeout
             )
             return self._handle_response(response)

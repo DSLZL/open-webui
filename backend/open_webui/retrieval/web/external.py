@@ -27,7 +27,7 @@ def search_external(
                 "query": query,
                 "count": count,
             },
-        )
+        timeout=60)
         response.raise_for_status()
         results = response.json()
         if filter_list:

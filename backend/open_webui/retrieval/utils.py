@@ -757,7 +757,7 @@ def generate_openai_batch_embeddings(
                 ),
             },
             json=json_data,
-        )
+        timeout=60)
         r.raise_for_status()
         data = r.json()
         if "data" in data:
@@ -806,7 +806,7 @@ def generate_azure_openai_batch_embeddings(
                     ),
                 },
                 json=json_data,
-            )
+            timeout=60)
             if r.status_code == 429:
                 retry = float(r.headers.get("Retry-After", "1"))
                 time.sleep(retry)
@@ -856,7 +856,7 @@ def generate_ollama_batch_embeddings(
                 ),
             },
             json=json_data,
-        )
+        timeout=60)
         r.raise_for_status()
         data = r.json()
 

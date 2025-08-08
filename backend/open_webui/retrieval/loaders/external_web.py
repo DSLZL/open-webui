@@ -38,7 +38,7 @@ class ExternalWebLoader(BaseLoader):
                     json={
                         "urls": urls,
                     },
-                )
+                timeout=60)
                 response.raise_for_status()
                 results = response.json()
                 for result in results:

@@ -63,7 +63,7 @@ class DatalabMarkerLoader:
         url = f"https://www.datalab.to/api/v1/marker/{request_id}"
         headers = {"X-Api-Key": self.api_key}
         try:
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, timeout=60)
             response.raise_for_status()
             result = response.json()
             log.info(f"Marker API status check for request {request_id}: {result}")
@@ -105,8 +105,8 @@ class DatalabMarkerLoader:
             with open(self.file_path, "rb") as f:
                 files = {"file": (filename, f, mime_type)}
                 response = requests.post(
-                    url, data=form_data, files=files, headers=headers
-                )
+                    url, data=form_data, files=files, headers=headers, 
+                timeout=60)
                 response.raise_for_status()
                 result = response.json()
         except FileNotFoundError:
@@ -141,7 +141,7 @@ class DatalabMarkerLoader:
         for _ in range(300):  # Up to 10 minutes
             time.sleep(2)
             try:
-                poll_response = requests.get(check_url, headers=headers)
+                poll_response = requests.get(check_url, headers=headers, timeout=60)
                 poll_response.raise_for_status()
                 poll_result = poll_response.json()
             except (requests.HTTPError, ValueError) as e:

@@ -29,7 +29,7 @@ def search_firecrawl(
                 "query": query,
                 "limit": count,
             },
-        )
+        timeout=60)
         response.raise_for_status()
         results = response.json().get("data", [])
         if filter_list:

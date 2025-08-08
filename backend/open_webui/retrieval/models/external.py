@@ -57,7 +57,7 @@ class ExternalReranker(BaseReranker):
                     ),
                 },
                 json=payload,
-            )
+            timeout=60)
 
             r.raise_for_status()
             data = r.json()

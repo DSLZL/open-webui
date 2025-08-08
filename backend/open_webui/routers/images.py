@@ -199,7 +199,7 @@ async def verify_url(request: Request, user=Depends(get_admin_user)):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 headers={"authorization": get_automatic1111_api_auth(request)},
-            )
+            timeout=60)
             r.raise_for_status()
             return True
         except Exception:
@@ -217,7 +217,7 @@ async def verify_url(request: Request, user=Depends(get_admin_user)):
             r = requests.get(
                 url=f"{request.app.state.config.COMFYUI_BASE_URL}/object_info",
                 headers=headers,
-            )
+            timeout=60)
             r.raise_for_status()
             return True
         except Exception:
@@ -235,7 +235,7 @@ def set_image_model(request: Request, model: str):
         r = requests.get(
             url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
             headers={"authorization": api_auth},
-        )
+        timeout=60)
         options = r.json()
         if model != options["sd_model_checkpoint"]:
             options["sd_model_checkpoint"] = model
@@ -243,7 +243,7 @@ def set_image_model(request: Request, model: str):
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 json=options,
                 headers={"authorization": api_auth},
-            )
+            timeout=60)
     return request.app.state.config.IMAGE_GENERATION_MODEL
 
 
@@ -274,7 +274,7 @@ def get_image_model(request):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/options",
                 headers={"authorization": get_automatic1111_api_auth(request)},
-            )
+            timeout=60)
             options = r.json()
             return options["sd_model_checkpoint"]
         except Exception as e:
@@ -356,7 +356,7 @@ def get_models(request: Request, user=Depends(get_verified_user)):
             r = requests.get(
                 url=f"{request.app.state.config.COMFYUI_BASE_URL}/object_info",
                 headers=headers,
-            )
+            timeout=60)
             info = r.json()
 
             workflow = json.loads(request.app.state.config.COMFYUI_WORKFLOW)
@@ -404,7 +404,7 @@ def get_models(request: Request, user=Depends(get_verified_user)):
             r = requests.get(
                 url=f"{request.app.state.config.AUTOMATIC1111_BASE_URL}/sdapi/v1/sd-models",
                 headers={"authorization": get_automatic1111_api_auth(request)},
-            )
+            timeout=60)
             models = r.json()
             return list(
                 map(
@@ -443,9 +443,9 @@ def load_b64_image_data(b64_str):
 def load_url_image_data(url, headers=None):
     try:
         if headers:
-            r = requests.get(url, headers=headers)
+            r = requests.get(url, headers=headers, timeout=60)
         else:
-            r = requests.get(url)
+            r = requests.get(url, timeout=60)
 
         r.raise_for_status()
         if r.headers["content-type"].split("/")[0] == "image":

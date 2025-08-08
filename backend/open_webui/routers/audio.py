@@ -595,7 +595,7 @@ def transcription_handler(request, file_path, metadata):
                         else {}
                     ),
                 },
-            )
+            timeout=60)
 
             r.raise_for_status()
             data = r.json()
@@ -648,7 +648,7 @@ def transcription_handler(request, file_path, metadata):
                 headers=headers,
                 params=params,
                 data=file_data,
-            )
+            timeout=60)
             r.raise_for_status()
             response_data = r.json()
 
@@ -754,7 +754,7 @@ def transcription_handler(request, file_path, metadata):
                     headers={
                         "Ocp-Apim-Subscription-Key": api_key,
                     },
-                )
+                timeout=60)
 
             r.raise_for_status()
             response = r.json()
@@ -997,8 +997,8 @@ def get_available_models(request: Request) -> list[dict]:
         ):
             try:
                 response = requests.get(
-                    f"{request.app.state.config.TTS_OPENAI_API_BASE_URL}/audio/models"
-                )
+                    f"{request.app.state.config.TTS_OPENAI_API_BASE_URL}/audio/models", 
+                timeout=60)
                 response.raise_for_status()
                 data = response.json()
                 available_models = data.get("models", [])
@@ -1043,8 +1043,8 @@ def get_available_voices(request) -> dict:
         ):
             try:
                 response = requests.get(
-                    f"{request.app.state.config.TTS_OPENAI_API_BASE_URL}/audio/voices"
-                )
+                    f"{request.app.state.config.TTS_OPENAI_API_BASE_URL}/audio/voices", 
+                timeout=60)
                 response.raise_for_status()
                 data = response.json()
                 voices_list = data.get("voices", [])
@@ -1087,7 +1087,7 @@ def get_available_voices(request) -> dict:
                 "Ocp-Apim-Subscription-Key": request.app.state.config.TTS_API_KEY
             }
 
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, timeout=60)
             response.raise_for_status()
             voices = response.json()
 
@@ -1119,7 +1119,7 @@ def get_elevenlabs_voices(api_key: str) -> dict:
                 "xi-api-key": api_key,
                 "Content-Type": "application/json",
             },
-        )
+        timeout=60)
         response.raise_for_status()
         voices_data = response.json()
 
